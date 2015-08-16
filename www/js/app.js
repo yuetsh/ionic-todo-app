@@ -3,10 +3,10 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-var todoApp = angular.module('starter', ['ionic', 'ngCordova'])
+var todoApp = angular.module('starter', ['ionic', 'ngCordova']);
 var db = null;
 
-todoApp.run(function ($ionicPlatform) {
+todoApp.run(function ($ionicPlatform, $rootScope, $ionicHistory) {
     $ionicPlatform.ready(function () {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -17,6 +17,10 @@ todoApp.run(function ($ionicPlatform) {
             StatusBar.styleDefault();
         }
     });
+
+    $rootScope.$back = function () {
+        $ionicHistory.goBack();
+    };
 });
 
 todoApp.config(function ($stateProvider, $urlRouterProvider) {
@@ -68,9 +72,9 @@ todoApp.controller("ConfigCtrl", function ($scope, $ionicHistory, $ionicPlatform
                 tx.executeSql("CREATE TABLE IF NOT EXISTS tblCategories (id integer primary key, category_name text)");
                 tx.executeSql("CREATE TABLE IF NOT EXISTS tblTodoLists (id integer primary key, category_id integer, todo_list_name text)");
                 tx.executeSql("CREATE TABLE IF NOT EXISTS tblTodoListsItems (id integer primary key, todo_list_id integer, todo_list_item_name text)");
-                tx.executeSql("INSERT INTO tblCategories (category_name) VALUES (?)", ["Shopping"]);
-                tx.executeSql("INSERT INTO tblCategories (category_name) VALUES (?)", ["Working"]);
-                tx.executeSql("INSERT INTO tblCategories (category_name) VALUES (?)", ["Learning"]);
+                tx.executeSql("INSERT INTO tblCategories (category_name) VALUES (?)", ["工作"]);
+                tx.executeSql("INSERT INTO tblCategories (category_name) VALUES (?)", ["生活"]);
+                tx.executeSql("INSERT INTO tblCategories (category_name) VALUES (?)", ["娱乐"]);
             });
             $ionicLoading.hide();
             $location.path("/categories");
@@ -141,7 +145,7 @@ todoApp.controller("ListsCtrl", function ($scope, $ionicPlatform, $cordovaSQLite
         }, function (err) {
             console.log(err);
         });
-    }
+    };
 });
 
 todoApp.controller("ItemsCtrl", function ($scope, $ionicPlatform, $cordovaSQLite, $stateParams, $ionicPopup) {
@@ -192,5 +196,15 @@ todoApp.controller("ItemsCtrl", function ($scope, $ionicPlatform, $cordovaSQLite
         }, function (err) {
             console.log(err);
         });
+    };
+});
+
+todoApp.directive("todoBack", function () {
+    return {
+        template: '<ion-nav-buttons side="lift">' +
+        '<button class="lift button button-icon ion-arrow-left-b" ng-click="$back()"></button>' +
+        '</ion-nav-buttons>',
+        restrict: "E",
+        replace: true
     }
 });

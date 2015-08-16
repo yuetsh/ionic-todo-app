@@ -2,6 +2,7 @@
     <ion-nav-buttons side="right">
         <button class="right button button-icon ion-plus" ng-click="insert()"></button>
     </ion-nav-buttons>
+    <todo-back></todo-back>
     <ion-content>
         <ion-list show-delete="false" can-swipe="true">
             <ion-item ng-repeat="list in lists" href="#/items/{{list.id}}">
@@ -10,5 +11,6 @@
                                    ng-click="delete(list)"></ion-option-button>
             </ion-item>
         </ion-list>
+        <h5 ng-show="!lists.length">右上角添加Lists</h5>
     </ion-content>
 </ion-view>
